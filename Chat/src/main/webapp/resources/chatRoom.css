@@ -10,29 +10,20 @@
 	background-color: rgba(0, 0, 0, 0.4);
 }
 
-.modal-content {
-	background-color: white;
-	margin: 15% auto;
-	padding: 20px;
-	border: 1px solid grey;
-	width: 300px;
-	text-align: center;
-}
-
 .chat-container {
 	background-color: rgba(178, 199, 218, 1);
 	border: 1px solid white;
-	border-radius: 5px;
+	border-radius: 12px;
 	padding: 20px;
 	width: 500px;
 }
 
 #messageArea::-webkit-scrollbar {
-  display: none;
+	display: none;
 }
 
-
 .chat-header {
+	border-radius: 12px;
 	background-color: white;
 	padding: 2px;
 	border-bottom: 1px solid white;
@@ -51,7 +42,7 @@
 
 .chat-message {
 	background-color: rgb(223, 240, 216);
-	border-radius: 10px;
+	border-radius: 12px;
 	padding: 10px 15px 10px 15px;
 	margin-bottom: 10px;
 }
@@ -74,12 +65,12 @@
 	border: 1px solid white;
 	border-radius: 5px;
 	padding: 5px;
-	width: 420px;
+	width: 415px;
 	height: 23px;
 }
 
 .input-group button {
-	background-color: darkgreen;
+	background-color: rgb(7, 180, 60);
 	color: white;
 	border: none;
 	border-radius: 5px;
@@ -87,11 +78,14 @@
 	cursor: pointer;
 }
 
+#message-submit-btn {
+	font-size: 14px;
+}
+
 .modal {
 	display: none;
 	position: fixed;
 	z-index: 1;
-	padding-top: 100px;
 	left: 0;
 	top: 0;
 	width: 100%;
@@ -101,23 +95,58 @@
 }
 
 .modal-content {
+	max-width: 310px;
+	max-height: 100px;
 	background-color: white;
-	margin: auto;
+	margin: 30% auto;
 	padding: 20px;
 	border: 1px solid lightslategrey;
-	width: 300px;
+	display: flex;
+	align-items: center;
+	border-radius: 8px;
 }
 
-.button-container {
-	text-align: right;
+#button-container {
+	display: flex;
 }
 
 .my-message {
-    background-color: rgba(254, 233, 52);
-    color: black;
+	background-color: rgba(254, 233, 52);
+	color: black;
 }
 
 .other-message {
-    background-color: white;
-    color: black;
+	background-color: white;
+	color: black;
+}
+
+#modal-confirm-btn {
+	padding: 8px 12px;
+	border: 0px;
+	border-radius: 8px;
+	box-shadow: none;
+	color: white;
+	font-size: 16px;
+	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+	margin-left: auto;
+	background-color: rgb(7, 180, 60);
+	cursor: pointer;
+}
+
+#modal-cancel-btn {
+	padding: 8px 12px;
+	border: 0px;
+	border-radius: 8px;
+	box-shadow: none;
+	color: white;
+	font-size: 16px;
+	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+	margin-left: 5px;
+	background-color: red;
+	cursor: pointer;
+}
+
+#nickname-input {
+	padding: 10px;
+	border-radius: 8px;
 }

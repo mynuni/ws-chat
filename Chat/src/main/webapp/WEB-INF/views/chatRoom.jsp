@@ -12,9 +12,8 @@
 <body>
 	<div id="modal" class="modal">
 		<div class="modal-content">
-			<h2>닉네임을 입력해주세요</h2>
-			<input type="text" id="nicknameInput">
 			<div class="button-container">
+				<input type="text" id="nickname-input" placeholder="닉네임을 입력해주세요.">
 				<button type="submit" id="modal-confirm-btn">확인</button>
 				<button type="button" id="modal-cancel-btn">취소</button>
 			</div>
@@ -33,7 +32,7 @@
 					<div class="input-group clearfix">
 						<input type="text" id="message" autocomplete="off"
 							class="form-control" />
-						<button type="submit" class="primary">전송</button>
+						<button type="submit" id="message-submit-btn">전송</button>
 					</div>
 				</div>
 			</form>
@@ -55,7 +54,7 @@
 			let roomId = null;
 
 			function connect(event) {
-				username = $("#nicknameInput").val().trim();
+				username = $("#nickname-input").val().trim();
 				if (username !== null && username !== '') {
 					const socket = createSocket();
 					stompClient = Stomp.over(socket);

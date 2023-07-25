@@ -11,5 +11,6 @@ public class ChatRoom {
 	private int roomId;
 	private String chatRoomName;
 	private String socketSession;
+	private int visitorCount;
 
 }
