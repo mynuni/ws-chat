@@ -9,5 +9,11 @@ public interface ChatRoomRepository {
 	public List<ChatRoom> getChatRoomList();
 
 	public void createChatRoom(ChatRoom chatRoom);
+	
+	public int getLastRoomNum();
+	
+	public ChatRoom getChatRoom(int roomId);
+	
+	public void deleteChatRoom(int roomId);
 
 }

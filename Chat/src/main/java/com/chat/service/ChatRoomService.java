@@ -22,5 +22,17 @@ public class ChatRoomService {
 	public void createChatRoom(ChatRoom chatRoom) {
 		chatRoomRepository.createChatRoom(chatRoom);
 	}
+	
+	public int getNewRoomNum() {
+		return chatRoomRepository.getLastRoomNum() + 1;
+	}
+	
+	public ChatRoom getChatRoom(int roomId) {
+		return chatRoomRepository.getChatRoom(roomId);
+	}
+	
+	public void deleteChatRoom(int roomId) {
+        chatRoomRepository.deleteChatRoom(roomId);
+    }
 
 }
