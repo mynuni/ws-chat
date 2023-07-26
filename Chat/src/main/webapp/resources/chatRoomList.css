@@ -148,3 +148,15 @@
 .close:hover, .close:focus {
 	cursor: pointer;
 }
+
+#empty-list-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.empty-list-notice {
+	color: rgb(100, 100, 100);
+}
