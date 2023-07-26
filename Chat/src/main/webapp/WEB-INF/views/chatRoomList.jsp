@@ -20,6 +20,12 @@
 		</div>
 		<div id="room-list-container">
 			<ul>
+				<c:if test="${empty chatRoomList}">
+					<div id="empty-list-container">
+					    <h3 class="empty-list-notice">현재 진행중인 채팅방이 없습니다.</h3>
+					    <h3 class="empty-list-notice">새로운 채팅을 시작해보세요.</h3>
+					</div>
+				</c:if>
 				<c:forEach var="chatRoom" items="${chatRoomList}">
 					<li>
 						<div class="room-number-wrap">
