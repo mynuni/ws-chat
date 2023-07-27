@@ -41,13 +41,6 @@ public class ChatRoomController {
 		model.addAttribute("chatRoomList", chatRoomList);
 		return "chatRoomList";
 	}
-
-	// 채팅방 생성
-//	@PostMapping
-//	public String createChatRoom(ChatRoom chatRoom) {
-//		chatRoomService.createChatRoom(chatRoom);
-//		return "redirect:/chat/room/" + chatRoom.getRoomId();
-//	}
 	
 	@PostMapping
 	@ResponseBody
