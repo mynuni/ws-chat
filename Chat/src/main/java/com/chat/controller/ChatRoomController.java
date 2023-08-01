@@ -44,47 +44,47 @@ public class ChatRoomController {
 	
 	@PostMapping
 	@ResponseBody
-	public ResponseEntity<Map<String, Integer>> createChatRoom(@RequestParam String chatRoomName) {
+	public ResponseEntity<Map<String, Long>> createChatRoom(@RequestParam String chatRoomName) {
 	    ChatRoom chatRoom = new ChatRoom();
 	    chatRoom.setChatRoomName(chatRoomName);
 	    chatRoomService.createChatRoom(chatRoom);
 
-	    // 생성된 방 번호를 JSON 형태로 응답
-	    Map<String, Integer> response = new HashMap<>();
+	    Map<String, Long> response = new HashMap<>();
 	    response.put("roomId", chatRoom.getRoomId());
 	    return ResponseEntity.ok(response);
 	}
 
-	// 채팅방 입장
 	@GetMapping("/{roomId}")
-	public String enterChatRoom(@PathVariable int roomId) {
+	public String enterChatRoom(@PathVariable Long roomId) {
 		return "chatRoom";
 	}
 	
 	@GetMapping("/new")
 	public String getChatRoomForm() {
-		int newRoomNum = chatRoomService.getNewRoomNum();
+		int newRoomNum = chatRoomService.generateNewRoomNum();
 		return "redirect:/chat/" + newRoomNum;
 	}
 
 	@MessageMapping("/chat.addUser/{roomId}")
 	@SendTo("/topic/{roomId}")
-	public ChatMessage addUser(@Payload ChatMessage chatMessage, @DestinationVariable int roomId,
+	public ChatMessage addUser(@Payload ChatMessage chatMessage, @DestinationVariable Long roomId,
 			SimpMessageHeaderAccessor headerAccessor) {
 		headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
 		headerAccessor.getSessionAttributes().put("roomId", roomId);
+		headerAccessor.setDestination("/topic/" + roomId);
 		
-		ChatRoom chatRoom = chatRoomService.getChatRoom(roomId);
-        if (chatRoom != null) {
-            chatRoom.setVisitorCount(chatRoom.getVisitorCount() + 1);
-        }
-        
+		chatRoomService.increaseVisitorCount(roomId);
 		return chatMessage;
 	}
 
 	@MessageMapping("/chat.sendMessage/{roomId}")
 	@SendTo("/topic/{roomId}")
-	public ChatMessage sendMessage(@Payload ChatMessage chatMessage, @DestinationVariable int roomId) {
+	public ChatMessage sendMessage(@Payload ChatMessage chatMessage, @DestinationVariable Long roomId) {
+		ChatRoom chatRoom = chatRoomService.getChatRoom(roomId);
+        if (chatRoom != null) {
+            chatRoomService.saveChatMessage(chatMessage, roomId);
+        }
+        
 		return chatMessage;
 	}
 

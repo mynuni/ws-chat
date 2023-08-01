@@ -2,18 +2,16 @@ package com.chat.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
 import com.chat.domain.ChatRoom;
 
-public interface ChatRoomRepository {
+public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 
-	public List<ChatRoom> getChatRoomList();
+	public List<ChatRoom> findAll();
 
-	public void createChatRoom(ChatRoom chatRoom);
+	@Query("SELECT MAX(c.roomId) FROM ChatRoom c")
+	public Integer getLastRoomNum();
 	
-	public int getLastRoomNum();
-	
-	public ChatRoom getChatRoom(int roomId);
-	
-	public void deleteChatRoom(int roomId);
-
 }
