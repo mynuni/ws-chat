@@ -5,6 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<script src="https://kit.fontawesome.com/5314583eb7.js" crossorigin="anonymous"></script>
 <link href="/resources/chatRoom.css" rel="stylesheet" type="text/css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <title>채팅방</title>
@@ -22,7 +23,8 @@
 	<div id="chat-page" class="hidden">
 		<div class="chat-container">
 			<div class="chat-header">
-				<h3>대화방</h3>
+				<i id="go-back-btn" class="fa-solid fa-arrow-left"></i>
+				<h3>${chatRoom.chatRoomName}</h3>
 			</div>
 			<ul id="messageArea">
 				<!-- 메세지 영역 -->
@@ -42,6 +44,10 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 	<script>
 		$(function() {
+			$("#go-back-btn").click(function () {
+			      history.back();
+			});
+			
 			let usernamePage = $('#username-page');
 			let chatPage = $('#chat-page');
 			let usernameForm = $('#usernameForm');

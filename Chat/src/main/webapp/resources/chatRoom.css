@@ -23,18 +23,26 @@
 }
 
 .chat-header {
+	display: flex;
+	align-items: center;
 	border-radius: 12px;
-	background-color: white;
 	padding: 2px;
-	border-bottom: 1px solid white;
 	margin-bottom: 10px;
 	text-align: center;
+}
+
+#go-back-btn {
+	padding: 5px;
+	margin: 0 20px 0 5px;
+	font-size: 22px;
+	cursor: pointer;
 }
 
 #messageArea {
 	list-style: none;
 	padding: 0;
-	margin: 0;
+	margin-top: 0px;
+	margin-bottom: 10px;
 	overflow-y: scroll;
 	min-height: 600px;
 	max-height: 600px;
@@ -44,7 +52,11 @@
 	background-color: rgb(223, 240, 216);
 	border-radius: 12px;
 	padding: 10px 15px 10px 15px;
-	margin-bottom: 10px;
+	margin: 15px 0 15px 0;
+}
+
+.chat-message p {
+	margin: 5px 0 5px 0;
 }
 
 .chat-message span {
@@ -113,11 +125,15 @@
 .my-message {
 	background-color: rgba(254, 233, 52);
 	color: black;
+	width: 250px;
+	margin-left: auto;
 }
 
 .other-message {
 	background-color: white;
 	color: black;
+	width: 250px;
+	margin-right: auto;
 }
 
 #modal-confirm-btn {
