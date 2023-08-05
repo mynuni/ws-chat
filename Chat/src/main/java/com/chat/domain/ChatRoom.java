@@ -37,6 +37,7 @@ public class ChatRoom {
 	private int visitorCount;
 	
 	@OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnore
 	private List<ChatMessage> messages = new ArrayList<>();
 
 }

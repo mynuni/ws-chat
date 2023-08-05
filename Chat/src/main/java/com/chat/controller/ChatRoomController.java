@@ -55,7 +55,9 @@ public class ChatRoomController {
 	}
 
 	@GetMapping("/{roomId}")
-	public String enterChatRoom(@PathVariable Long roomId) {
+	public String enterChatRoom(@PathVariable Long roomId, Model model) {
+		ChatRoom chatRoom = chatRoomService.getChatRoom(roomId);
+		model.addAttribute("chatRoom", chatRoom);
 		return "chatRoom";
 	}
 	
