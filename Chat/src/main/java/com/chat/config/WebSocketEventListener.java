@@ -26,20 +26,6 @@ public class WebSocketEventListener {
 	public void handleWebSocketConnectListener(SessionConnectedEvent event) {
 		StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 		log.info("새로운 연결 SessionID = {}", headerAccessor.getSessionId());
-
-		// 참여자 수 계산
-		String destination = headerAccessor.getDestination();
-		if (destination != null && destination.startsWith("/topic/")) {
-			String roomIdStr = destination.substring("/topic/".length());
-			Long roomId = Long.parseLong(roomIdStr);
-			ChatRoom chatRoom = chatRoomService.getChatRoom(roomId);
-
-			if (chatRoom != null) {
-				log.info("참여자 수 증가");
-				chatRoom.setVisitorCount(chatRoom.getVisitorCount() + 1);
-			}
-		}
-
 	}
 
 	@EventListener
