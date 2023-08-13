@@ -117,6 +117,7 @@
 				if (message.type === 'JOIN') {
 					messageElement.addClass('event-message');
 					textElement.text(message.sender + '님이 입장하셨습니다.');
+					joinAlert();
 				} else if (message.type === 'LEAVE') {
 					messageElement.addClass('event-message');
 					textElement.text(message.sender + '님이 퇴장하셨습니다.');
@@ -159,6 +160,9 @@
 			});
 
 		});
+		
+		
 	</script>
+	<script src="${pageContext.request.contextPath}/resources/sound/alert.js"></script>
 </body>
 </html>
