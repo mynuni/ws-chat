@@ -3,6 +3,7 @@ package com.chat.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -10,6 +11,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.chat.domain.ChatMessage;
 import com.chat.domain.ChatRoom;
 import com.chat.service.ChatRoomService;
+import com.chat.service.ParticipantManager;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +36,9 @@ import lombok.extern.slf4j.Slf4j;
 public class ChatRoomController {
 
 	private final ChatRoomService chatRoomService;
+	private final ParticipantManager participantManager;
+	private final SimpMessagingTemplate messagingTemplate;
 
-	// 채팅방 목록
 	@GetMapping
 	public String getChatRoomList(Model model) {
 		List<ChatRoom> chatRoomList = chatRoomService.getChatRoomList();
@@ -69,13 +73,18 @@ public class ChatRoomController {
 
 	@MessageMapping("/chat.addUser/{roomId}")
 	@SendTo("/topic/{roomId}")
-	public ChatMessage addUser(@Payload ChatMessage chatMessage, @DestinationVariable Long roomId,
+	public ChatMessage addUser(@Payload ChatMessage chatMessage, @DestinationVariable Long roomId, 
 			SimpMessageHeaderAccessor headerAccessor) {
+		
 		headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
 		headerAccessor.getSessionAttributes().put("roomId", roomId);
 		headerAccessor.setDestination("/topic/" + roomId);
 		
+		participantManager.addParticipant(roomId, chatMessage.getSender());
+		Set<String> participants = participantManager.getParticipants(roomId);
+		messagingTemplate.convertAndSend("/topic/participants/" + roomId, participants);
 		chatRoomService.increaseVisitorCount(roomId);
+		
 		return chatMessage;
 	}
 
@@ -83,11 +92,12 @@ public class ChatRoomController {
 	@SendTo("/topic/{roomId}")
 	public ChatMessage sendMessage(@Payload ChatMessage chatMessage, @DestinationVariable Long roomId) {
 		ChatRoom chatRoom = chatRoomService.getChatRoom(roomId);
+		
         if (chatRoom != null) {
             chatRoomService.saveChatMessage(chatMessage, roomId);
         }
         
 		return chatMessage;
 	}
-
+	
 }

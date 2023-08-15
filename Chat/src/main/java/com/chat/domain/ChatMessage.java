@@ -42,9 +42,9 @@ public class ChatMessage {
 	public enum MessageType {
 		CHAT, JOIN, LEAVE
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chatroom_id", nullable = false)
-    private ChatRoom chatRoom;
-	
+	@JoinColumn(name = "chatroom_id", nullable = false)
+	private ChatRoom chatRoom;
+
 }
