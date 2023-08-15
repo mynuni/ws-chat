@@ -37,30 +37,36 @@ public class WebSocketEventListener {
 		StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 		String username = (String) headerAccessor.getSessionAttributes().get("username");
 		Long roomId = (Long) headerAccessor.getSessionAttributes().get("roomId");
-		
+
 		if (username != null && roomId != null) {
-			ChatMessage chatMessage = new ChatMessage();
-			chatMessage.setType(ChatMessage.MessageType.LEAVE);
-			chatMessage.setSender(username);
-			messagingTemplate.convertAndSend("/topic/" + roomId, chatMessage);
+			ChatMessage generatedLeaveMessage = generateLeaveMessage(username);
+			messagingTemplate.convertAndSend("/topic/" + roomId, generatedLeaveMessage);
 			log.info("연결 종료 SessionID = {}", headerAccessor.getSessionId());
-			
-	        participantManager.removeParticipant(roomId, username);
-	        Set<String> participants = participantManager.getParticipants(roomId);
-	        participantManager.sendParticipantsUpdate(roomId, participants);
 
-			// 참여자 수 감소
-			ChatRoom chatRoom = chatRoomService.getChatRoom(roomId);
-			if (chatRoom != null) {
-				chatRoom.setVisitorCount(chatRoom.getVisitorCount() - 1);
-				chatRoomService.updateChatRoom(chatRoom);
+			Set<String> participants = participantManager.getParticipants(roomId);
+			participantManager.sendParticipantsUpdate(roomId, participants);
+			participantManager.removeParticipant(roomId, username);
+			updateChatRoomState(roomId);
+		}
+	}
 
-				// 아무도 없을 경우 방 삭제
-				if (chatRoom.getVisitorCount() == 0) {
-					chatRoomService.deleteChatRoom(roomId);
-				}
+	private ChatMessage generateLeaveMessage(String username) {
+		ChatMessage chatMessage = new ChatMessage();
+		chatMessage.setType(ChatMessage.MessageType.LEAVE);
+		chatMessage.setSender(username);
+		return chatMessage;
+	}
+
+	private void updateChatRoomState(Long roomId) {
+		ChatRoom chatRoom = chatRoomService.getChatRoom(roomId);
+		if (chatRoom != null) {
+			int updatedVisitorCount = chatRoom.getVisitorCount() - 1;
+			chatRoom.setVisitorCount(updatedVisitorCount);
+			chatRoomService.updateChatRoom(chatRoom);
+
+			if (updatedVisitorCount == 0) {
+				chatRoomService.deleteChatRoom(roomId);
 			}
-
 		}
 	}
 
