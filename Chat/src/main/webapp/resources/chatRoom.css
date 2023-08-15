@@ -166,3 +166,51 @@
 	padding: 10px;
 	border-radius: 8px;
 }
+
+#participant-list-btn {
+	margin-left: auto;
+	margin-right: 10px;
+	font-size: 22px;
+	cursor: pointer;
+}
+
+.fa-circle-user {
+	margin-right: 5px;
+	font-size: 20px;
+}
+
+#user-list-dot {
+	margin-right: 5px;
+	font-size: 8px;
+	color: black;
+}
+
+#participant-list {
+	width: 120px;
+	height: 150px;
+	display: none;
+	position: absolute;
+	top: 7%;
+    left: 385px;
+    border-radius: 8px;
+    background-color: white;
+    border: 1px solid lightgrey;
+    padding: 8px;
+    z-index: 2;
+    overflow: hidden;
+}
+
+#participant-list ul {
+	overflow-y: auto;
+	max-height: 100%;
+    padding: 0;
+    margin-left: 10px;
+}
+
+#participant-list ul li {
+	list-style: disc;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+}
+

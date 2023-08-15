@@ -25,6 +25,12 @@
 			<div class="chat-header">
 				<i id="go-back-btn" class="fa-solid fa-arrow-left"></i>
 				<h3>${chatRoom.chatRoomName}</h3>
+				<i id="participant-list-btn" class="fa-solid fa-bars"></i>
+				<div id="participant-list">
+					<ul id="participants">
+						<!-- 참가자 명단 영역 -->
+					</ul>
+				</div>
 			</div>
 			<ul id="messageArea">
 				<!-- 메세지 영역 -->
@@ -32,8 +38,7 @@
 			<form id="messageForm" name="messageForm">
 				<div class="form-group">
 					<div class="input-group clearfix">
-						<input type="text" id="message" autocomplete="off"
-							class="form-control" />
+						<input type="text" id="message" autocomplete="off" class="form-control" />
 						<button type="submit" id="message-submit-btn">전송</button>
 					</div>
 				</div>
@@ -79,6 +84,12 @@
 				roomId = window.location.pathname.split('/').pop();
 				console.log("룸 ID:" + roomId);
 				stompClient.subscribe('/topic/' + roomId, onMessageReceived);
+				
+			    stompClient.subscribe('/topic/participants/' + roomId, function(payload) {
+			        let participants = JSON.parse(payload.body);
+			        updateParticipantList(participants);
+			    });
+				
 				stompClient.send("/app/chat.addUser/" + roomId, {}, JSON
 						.stringify({
 							sender : username,
@@ -108,38 +119,59 @@
 				event.preventDefault();
 			}
 
+			// 닉네임별 랜덤 색상을 위한 변수
+			let participantColors = {};
+
 			function onMessageReceived(payload) {
-				var message = JSON.parse(payload.body);
+			    var message = JSON.parse(payload.body);
 
-				var messageElement = $('<li></li>');
-				var textElement = $('<p></p>');
+			    var messageElement = $('<li></li>');
+			    var textElement = $('<p></p>');
 
-				if (message.type === 'JOIN') {
-					messageElement.addClass('event-message');
-					textElement.text(message.sender + '님이 입장하셨습니다.');
-					joinAlert();
-				} else if (message.type === 'LEAVE') {
-					messageElement.addClass('event-message');
-					textElement.text(message.sender + '님이 퇴장하셨습니다.');
-				} else {
-					messageElement.addClass('chat-message');
-					var usernameElement = $('<span></span>').text(
-							message.sender);
-					messageElement.append(usernameElement);
+			    if (message.type === 'JOIN') {
+			        messageElement.addClass('event-message');
+			        textElement.text(message.sender + '님이 입장하셨습니다.');
+			        joinAlert();
+			    } else if (message.type === 'LEAVE') {
+			        messageElement.addClass('event-message');
+			        textElement.text(message.sender + '님이 퇴장하셨습니다.');
+			    } else {
+			        messageElement.addClass('chat-message');
+			        
+			        var usernameElement = $('<span></span>').text(message.sender);
+			        var circleIcon = $('<i class="fa-solid fa-circle-user"></i>');
+			        
+			        usernameElement.prepend(circleIcon);
+			        
+			        // 새로운 닉네임에게 랜덤 색상 부여
+			        if (!participantColors.hasOwnProperty(message.sender)) {
+			        	participantColors[message.sender] = getRandomColor();
+			        }
+			        
+			        circleIcon.css('color', participantColors[message.sender]);
+			        
+			        messageElement.append(usernameElement);
 
-					if (message.sender === username) {
-						messageElement.addClass('my-message');
-					} else {
-						messageElement.addClass('other-message');
-					}
+			        if (message.sender === username) {
+			            messageElement.addClass('my-message');
+			        } else {
+			            messageElement.addClass('other-message');
+			        }
 
-					textElement.text(message.content);
-				}
+			        textElement.text(message.content);
+			    }
 
-				messageElement.append(textElement);
+			    messageElement.append(textElement);
 
-				messageArea.append(messageElement);
-				messageArea.scrollTop(messageArea[0].scrollHeight);
+			    messageArea.append(messageElement);
+			    messageArea.scrollTop(messageArea[0].scrollHeight);
+			}
+
+			// 랜덤 색상 계산
+			function getRandomColor() {
+			    let colors = ['red', 'orange', 'green', 'blue', 'purple'];
+			    let randomIndex = Math.floor(Math.random() * colors.length);
+			    return colors[randomIndex];
 			}
 
 			function closeModal() {
@@ -158,9 +190,21 @@
 			$("#modal-cancel-btn").click(function() {
 				history.back();
 			});
+			
+			function updateParticipantList(participants) {
+			    let participantsElement = $('#participants');
+			    participantsElement.empty();
 
+			    participants.forEach(function(participant) {
+			        participantsElement.append('<li><i id="user-list-dot" class="fa-solid fa-minus"></i>' + participant + '</li>');
+			    });
+			}
+			
+			$("#participant-list-btn").click(function() {
+	            $("#participant-list").toggle();
+	        });
+			
 		});
-		
 		
 	</script>
 	<script src="${pageContext.request.contextPath}/resources/sound/alert.js"></script>
