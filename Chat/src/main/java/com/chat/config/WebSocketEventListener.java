@@ -43,9 +43,9 @@ public class WebSocketEventListener {
 			messagingTemplate.convertAndSend("/topic/" + roomId, generatedLeaveMessage);
 			log.info("연결 종료 SessionID = {}", headerAccessor.getSessionId());
 
+			participantManager.removeParticipant(roomId, username);
 			Set<String> participants = participantManager.getParticipants(roomId);
 			participantManager.sendParticipantsUpdate(roomId, participants);
-			participantManager.removeParticipant(roomId, username);
 			updateChatRoomState(roomId);
 		}
 	}

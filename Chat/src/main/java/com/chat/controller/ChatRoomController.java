@@ -84,7 +84,6 @@ public class ChatRoomController {
 		Set<String> participants = participantManager.getParticipants(roomId);
 		messagingTemplate.convertAndSend("/topic/participants/" + roomId, participants);
 		chatRoomService.increaseVisitorCount(roomId);
-		
 		return chatMessage;
 	}
 
