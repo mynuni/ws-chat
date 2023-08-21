@@ -34,24 +34,19 @@ public class ChatRoomService {
 	}
 
 	public ChatRoom getChatRoom(Long roomId) {
-		return chatRoomRepository.findById(roomId)
-				.orElseThrow(() -> new NoSuchElementException("NO ROOM FOUND ID:" + roomId));
+		return findById(roomId);
 	}
 
 	public void saveChatMessage(ChatMessage chatMessage, Long roomId) {
-		ChatRoom chatRoom = chatRoomRepository.findById(roomId)
-				.orElseThrow(() -> new NoSuchElementException("NO ROOM FOUND ID:" + roomId));
+		ChatRoom chatRoom = findById(roomId);
 		chatMessage.setChatRoom(chatRoom);
 		chatMessageRepository.save(chatMessage);
 	}
 	
 	public void increaseVisitorCount(Long roomId) {
-		ChatRoom chatRoom = chatRoomRepository.findById(roomId)
-				.orElseThrow(() -> new NoSuchElementException("NO ROOM FOUND ID: " + roomId));
+		ChatRoom chatRoom = findById(roomId);
 		chatRoom.setVisitorCount(chatRoom.getVisitorCount() + 1);
 		updateChatRoom(chatRoom);
-		log.info("참가인원++");
-		log.info("ROOM ID:{}, COUNT:{}", chatRoom.getRoomId(), chatRoom.getVisitorCount());
 	}
 
 	public void updateChatRoom(ChatRoom chatRoom) {
@@ -61,5 +56,10 @@ public class ChatRoomService {
 	public void deleteChatRoom(Long roomId) {
 		chatRoomRepository.deleteById(roomId);
 	}
-
+	
+    private ChatRoom findById(Long id) {
+        return chatRoomRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("NO ROOM FOUND ID: " + id));
+    }
+    
 }
